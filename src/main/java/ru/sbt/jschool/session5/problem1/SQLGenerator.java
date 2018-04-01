@@ -38,8 +38,7 @@ public class SQLGenerator {
     }
 
     public <T> String delete(Class<T> clazz) {
-        String result = "DELETE FROM " + getName(clazz) + " WHERE " + getPrimaryKeysViaAnd(clazz);
-        return result;
+        return "DELETE FROM " + getName(clazz) + " WHERE " + getPrimaryKeysViaAnd(clazz);
     }
 
     public <T> String select(Class<T> clazz) {
@@ -63,12 +62,16 @@ public class SQLGenerator {
     private List<String> getFieldNames(Class clazz, boolean isPrimaryKeysIncludes, boolean isColumnsIncludes) {
         List<String> resultFields = new ArrayList<>();
         String field;
+        Column annotatedName;
         Field[] fields = clazz.getDeclaredFields();
         for (Field elem : fields) {
             if (elem.isAnnotationPresent(Column.class) && isColumnsIncludes
                     || elem.isAnnotationPresent(PrimaryKey.class) && isPrimaryKeysIncludes) {
-                field = elem.toString();
-                field = field.substring(field.lastIndexOf(".") + 1);
+                field = elem.getName();
+                annotatedName = elem.getAnnotation(Column.class);
+                if (annotatedName != null && annotatedName.name().length() > 0) {
+                    field = annotatedName.name();
+                }
                 resultFields.add(field.toLowerCase());
             }
         }
