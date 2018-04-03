@@ -1,6 +1,9 @@
 package ru.sbt.jschool.session5.problem1;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,9 +57,15 @@ public class SQLGenerator {
     }
 
     private String getName(Class clazz) {
-        String name = clazz.getAnnotations()[0].toString();
-        name = name.substring(name.indexOf("\"") + 1, name.lastIndexOf("\""));
-        return name;
+        Class<? extends Annotation> type = clazz.getAnnotations()[0].annotationType();
+        Method method = type.getDeclaredMethods()[0];
+        Object value = null;
+        try {
+            value = method.invoke(clazz.getAnnotations()[0], (Object[]) null);
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            e.printStackTrace();
+        }
+        return value.toString();
     }
 
     private List<String> getFieldNames(Class clazz, boolean isPrimaryKeysIncludes, boolean isColumnsIncludes) {
