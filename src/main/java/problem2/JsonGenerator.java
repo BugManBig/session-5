@@ -16,10 +16,8 @@ public class JsonGenerator {
         simpleClassTypes.add("String");
     }
 
-    public void objectToJson(Object object) {
+    public String objectToJson(Object object) {
         generate(object, 0);
-        System.out.println(result);
-        result = "";
         Class clazz = object.getClass().getSuperclass();
         if (!Objects.equals(clazz.getName(), "java.lang.Object")) {
             try {
@@ -28,6 +26,7 @@ public class JsonGenerator {
                 e.printStackTrace();
             }
         }
+        return result;
     }
 
     private boolean isEmptyLine() {
@@ -111,7 +110,7 @@ public class JsonGenerator {
                 }
                 result += "\n";
             }
-            printLine("}", shift);
+            printLine("}\n", shift);
         }
     }
 
