@@ -2,11 +2,8 @@ package problem2;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class JsonGenerator {
     private Set<String> simpleClassTypes = new HashSet<>();
@@ -50,6 +47,16 @@ public class JsonGenerator {
         }
         if (object instanceof Set) {
             generate(((Set) (object)).toArray(), shift);
+            return;
+        }
+        if (object instanceof Calendar) {
+            SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
+            result += format.format(((Calendar) object).getTime());
+            return;
+        }
+        if (object instanceof Date) {
+            SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
+            result += format.format(((Date) object).getTime());
             return;
         }
         String className = getClassName(object);

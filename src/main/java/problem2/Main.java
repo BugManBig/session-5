@@ -7,6 +7,6 @@ public class Main {
         JsonGenerator jsonGenerator = new JsonGenerator();
         ArrayList<String> al = new ArrayList<>();
         al.add("One");
-        jsonGenerator.objectToJson(al);
+        jsonGenerator.objectToJson(new SampleClass2());
     }
 }
