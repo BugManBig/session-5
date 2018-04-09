@@ -3,23 +3,25 @@ package problem2;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
 public class JsonGenerator {
-    private Set<String> classTypes = new HashSet<>();
+    private Set<String> simpleClassTypes = new HashSet<>();
     private String result = "";
 
     public JsonGenerator() {
-        classTypes.add("Integer");
-        classTypes.add("Long");
-        classTypes.add("Double");
-        classTypes.add("String");
+        simpleClassTypes.add("Integer");
+        simpleClassTypes.add("Long");
+        simpleClassTypes.add("Double");
+        simpleClassTypes.add("String");
     }
 
     public void objectToJson(Object object) {
         generate(object, 0);
         System.out.println(result);
+        
     }
 
     private boolean isEmptyLine() {
@@ -33,8 +35,16 @@ public class JsonGenerator {
     }
 
     private void generate(Object object, int shift) {
+        if (object instanceof List) {
+            generate(((List) (object)).toArray(), shift);
+            return;
+        }
+        if (object instanceof Set) {
+            generate(((Set) (object)).toArray(), shift);
+            return;
+        }
         String className = getClassName(object);
-        if (classTypes.contains(className)) {
+        if (simpleClassTypes.contains(className)) {
             if (isEmptyLine()) {
                 if (Objects.equals(className, "String")) {
                     printLine("\"" + object.toString() + "\"", shift);
@@ -72,21 +82,25 @@ public class JsonGenerator {
                 result += "{" + "\n";
             }
             Field[] fields = object.getClass().getDeclaredFields();
-            for (Field elem : fields) {
-                printLine("\"" + elem.getName() + "\"" + ": ", shift + 4);
+            for (int i = 0; i < fields.length; i++) {
+                fields[i].setAccessible(true);
+                printLine("\"" + fields[i].getName() + "\"" + ": ", shift + 4);
                 try {
-                    generate(elem.get(object), shift + 4);
+                    generate(fields[i].get(object), shift + 4);
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();
                 }
-                result += "," + "\n";
+                if (i < fields.length - 1) {
+                    result += ",";
+                }
+                result += "\n";
             }
             printLine("}", shift);
         }
     }
 
     private boolean isArray(Object object) {
-        return object.getClass().getName().charAt(0) == '[';
+        return object.getClass().isArray();
     }
 
 
