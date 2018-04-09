@@ -2,6 +2,7 @@ package problem2;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -21,7 +22,15 @@ public class JsonGenerator {
     public void objectToJson(Object object) {
         generate(object, 0);
         System.out.println(result);
-        
+        result = "";
+        Class clazz = object.getClass().getSuperclass();
+        if (!Objects.equals(clazz.getName(), "java.lang.Object")) {
+            try {
+                objectToJson(clazz.getConstructor().newInstance());
+            } catch (ReflectiveOperationException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private boolean isEmptyLine() {

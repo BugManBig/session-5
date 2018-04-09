@@ -12,6 +12,5 @@ public class SampleClass {
         list.add("CD");
         list.add("EF");
     }
-    //public int[] numbers = {3, 6, 9};
-    //public SampleClass2 class2 = new SampleClass2();
+    public int[] numbers = {3, 6, 9};
 }
