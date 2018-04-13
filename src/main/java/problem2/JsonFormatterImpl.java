@@ -9,6 +9,7 @@ public class JsonFormatterImpl implements JsonFormatter {
 
     public JsonFormatterImpl() {
         types.put(Date.class, new JsonDateFormatter());
+        types.put(Object.class, new JsonObjectFormatter());
     }
 
     @Override
@@ -18,8 +19,10 @@ public class JsonFormatterImpl implements JsonFormatter {
         }
 
         Map<String, Object> ctx = new HashMap<>();
+        ctx.put("shiftCount", 0);
+        ctx.put("shiftType", "    ");
 
-        if (!types.containsKey(obj)) {
+        if (!types.containsKey(obj.getClass())) {
             return types.get(Object.class).format(obj, this, ctx);
         }
 
