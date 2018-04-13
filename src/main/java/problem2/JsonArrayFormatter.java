@@ -13,7 +13,7 @@ public class JsonArrayFormatter implements JsonTypeFormatter<Object> {
         ctx.put("shiftCount", shiftCount + 1);
 
         for (int i = 0; i < Array.getLength(object); i++) {
-            result += getTrueShift(ctx) + Array.get(object, i) + ",\n";
+            result += getTrueShift(ctx) + jsonFormatter.generateNext(Array.get(object, i), ctx) + ",\n";
         }
 
         ctx.remove("shiftCount");

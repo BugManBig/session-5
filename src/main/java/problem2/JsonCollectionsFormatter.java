@@ -15,7 +15,7 @@ public class JsonCollectionsFormatter implements JsonTypeFormatter<Collection> {
 
         Object[] array = list.toArray();
         for (Object elem : array) {
-            result += getTrueShift(ctx) + elem + ",\n";
+            result += getTrueShift(ctx) + jsonFormatter.generateNext(elem, ctx) + ",\n";
         }
 
         ctx.remove("shiftCount");
