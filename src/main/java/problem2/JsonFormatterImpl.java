@@ -1,5 +1,6 @@
 package problem2;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 public class JsonFormatterImpl implements JsonFormatter {
@@ -18,10 +19,19 @@ public class JsonFormatterImpl implements JsonFormatter {
 
     @Override
     public String marshall(Object obj) {
+        String result = "";
         Map<String, Object> ctx = new HashMap<>();
         ctx.put("shiftCount", 0);
         ctx.put("shiftType", "    ");
-        return generateNext(obj, ctx);
+        result += generateNext(obj, ctx) + "\n";
+        if (obj.getClass().getSuperclass() != Object.class) {
+            try {
+                result += marshall(obj.getClass().getSuperclass().getConstructor().newInstance());
+            } catch (InstantiationException | InvocationTargetException | IllegalAccessException | NoSuchMethodException e) {
+                e.printStackTrace();
+            }
+        }
+        return result;
     }
 
     @Override

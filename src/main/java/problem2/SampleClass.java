@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class SampleClass {
+public class SampleClass extends SampleClass2 {
     private int a = 3;
     public String text = "sdf";
     private List<String> list = new ArrayList<>();

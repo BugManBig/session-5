@@ -4,7 +4,10 @@ import java.util.Map;
 
 public class OftenActions {
     public static String cutLastComma(String string) {
-        return string.substring(0, string.length() - 2) + "\n";
+        if (string.charAt(string.length() - 2) == ',') {
+            return string.substring(0, string.length() - 2) + "\n";
+        }
+        return string.substring(0, string.length() - 3) + "\n";
     }
 
     public static String getTrueShift(Map<String, Object> ctx) {
