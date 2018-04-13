@@ -7,11 +7,13 @@ public class JsonFormatterImpl implements JsonFormatter {
 
     public JsonFormatterImpl() {
         types.put(Date.class, new JsonDateFormatter());
+        types.put(GregorianCalendar.class, new JsonDateFormatter());
         types.put(Object.class, new JsonObjectFormatter());
         types.put(Integer.class, new JsonSimpleFormatter());
         types.put(Double.class, new JsonSimpleFormatter());
-        types.put(String.class, new JsonSimpleFormatter());
-        types.put(GregorianCalendar.class, new JsonDateFormatter());
+        types.put(String.class, new JsonStringFormatter());
+        types.put(ArrayList.class, new JsonListFormatter());
+        types.put(int[].class, new JsonArrayFormatter());
     }
 
     @Override

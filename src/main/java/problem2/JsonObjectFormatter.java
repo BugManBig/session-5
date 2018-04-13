@@ -15,7 +15,7 @@ public class JsonObjectFormatter implements JsonTypeFormatter<Object> {
         Field[] fields = object.getClass().getDeclaredFields();
         for (Field elem : fields) {
             elem.setAccessible(true);
-            result += getTrueShift(ctx) + elem.getName() + ": " + getValue(elem, object, jsonFormatter) + "\n";
+            result += getTrueShift(ctx) + elem.getName() + ": " + getValue(elem, object, jsonFormatter) + ",\n";
         }
 
         ctx.remove("shiftCount");
