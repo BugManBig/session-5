@@ -1,8 +1,6 @@
 package problem2;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class JsonFormatterImpl implements JsonFormatter {
     private Map<Class, JsonTypeFormatter> types = new HashMap<>();
@@ -10,6 +8,10 @@ public class JsonFormatterImpl implements JsonFormatter {
     public JsonFormatterImpl() {
         types.put(Date.class, new JsonDateFormatter());
         types.put(Object.class, new JsonObjectFormatter());
+        types.put(Integer.class, new JsonSimpleFormatter());
+        types.put(Double.class, new JsonSimpleFormatter());
+        types.put(String.class, new JsonSimpleFormatter());
+        types.put(GregorianCalendar.class, new JsonDateFormatter());
     }
 
     @Override

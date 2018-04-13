@@ -6,7 +6,8 @@ import java.util.Map;
 public class JsonObjectFormatter implements JsonTypeFormatter<Object> {
     @Override
     public String format(Object object, JsonFormatter jsonFormatter, Map<String, Object> ctx) {
-        String result = "{\n";
+        String result = getTrueShift(ctx) + "{\n";
+
         int shiftCount = (int) ctx.get("shiftCount");
         ctx.remove("shiftCount");
         ctx.put("shiftCount", shiftCount + 1);
@@ -14,24 +15,25 @@ public class JsonObjectFormatter implements JsonTypeFormatter<Object> {
         Field[] fields = object.getClass().getDeclaredFields();
         for (Field elem : fields) {
             elem.setAccessible(true);
-            result += getTrueShift(ctx) + elem.getName() + ": " + getValue(elem, object) + "\n";
+            result += getTrueShift(ctx) + elem.getName() + ": " + getValue(elem, object, jsonFormatter) + "\n";
         }
-
-        result += "}";
 
         ctx.remove("shiftCount");
         ctx.put("shiftCount", shiftCount);
 
+        result += getTrueShift(ctx) + "}";
+
         return result;
     }
 
-    private String getValue(Field field, Object object) {
+    private String getValue(Field field, Object object, JsonFormatter jsonFormatter) {
+        Object result = null;
         try {
-            return field.get(object).toString();
+            result = field.get(object);
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
-        return null;
+        return jsonFormatter.marshall(result);
     }
 
     private String getTrueShift(Map<String, Object> ctx) {
