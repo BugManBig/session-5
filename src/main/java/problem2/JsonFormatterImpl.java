@@ -18,21 +18,24 @@ public class JsonFormatterImpl implements JsonFormatter {
 
     @Override
     public String marshall(Object obj) {
-        if (obj == null) {
-            return "";
-        }
-
         Map<String, Object> ctx = new HashMap<>();
         ctx.put("shiftCount", 0);
         ctx.put("shiftType", "    ");
+        return generateNext(obj, ctx);
+    }
 
-        if (obj.getClass().isArray()) {
-            return new JsonArrayFormatter().format(obj, this, ctx);
+    @Override
+    public String generateNext(Object object, Map<String, Object> ctx) {
+        if (object == null) {
+            return "";
         }
-        if (!types.containsKey(obj.getClass())) {
-            return types.get(Object.class).format(obj, this, ctx);
+        if (object.getClass().isArray()) {
+            return new JsonArrayFormatter().format(object, this, ctx);
         }
-        return types.get(obj.getClass()).format(obj, this, ctx);
+        if (!types.containsKey(object.getClass())) {
+            return types.get(Object.class).format(object, this, ctx);
+        }
+        return types.get(object.getClass()).format(object, this, ctx);
     }
 
     @Override

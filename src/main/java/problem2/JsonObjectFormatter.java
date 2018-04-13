@@ -15,7 +15,7 @@ public class JsonObjectFormatter implements JsonTypeFormatter<Object> {
         Field[] fields = object.getClass().getDeclaredFields();
         for (Field elem : fields) {
             elem.setAccessible(true);
-            result += getTrueShift(ctx) + elem.getName() + ": " + getValue(elem, object, jsonFormatter) + ",\n";
+            result += getTrueShift(ctx) + elem.getName() + ": " + getValue(elem, object, jsonFormatter, ctx) + ",\n";
         }
 
         ctx.remove("shiftCount");
@@ -26,14 +26,14 @@ public class JsonObjectFormatter implements JsonTypeFormatter<Object> {
         return result;
     }
 
-    private String getValue(Field field, Object object, JsonFormatter jsonFormatter) {
+    private String getValue(Field field, Object object, JsonFormatter jsonFormatter, Map<String, Object> ctx) {
         Object result = null;
         try {
             result = field.get(object);
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
-        return jsonFormatter.marshall(result);
+        return jsonFormatter.generateNext(result, ctx);
     }
 
     private String getTrueShift(Map<String, Object> ctx) {
