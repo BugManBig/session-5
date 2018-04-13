@@ -1,12 +1,13 @@
 package problem2;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-public class JsonListFormatter implements JsonTypeFormatter<List> {
+public class JsonCollectionsFormatter implements JsonTypeFormatter<Collection> {
     @Override
-    public String format(List list, JsonFormatter jsonFormatter, Map<String, Object> ctx) {
-        String result = getTrueShift(ctx) + "{\n";
+    public String format(Collection list, JsonFormatter jsonFormatter, Map<String, Object> ctx) {
+        String result = "[\n";
 
         int shiftCount = (int) ctx.get("shiftCount");
         ctx.remove("shiftCount");
@@ -20,7 +21,7 @@ public class JsonListFormatter implements JsonTypeFormatter<List> {
         ctx.remove("shiftCount");
         ctx.put("shiftCount", shiftCount);
 
-        result += getTrueShift(ctx) + "}";
+        result += getTrueShift(ctx) + "]";
 
         return result;
     }

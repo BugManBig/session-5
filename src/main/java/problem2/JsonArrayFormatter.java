@@ -3,17 +3,17 @@ package problem2;
 import java.lang.reflect.Array;
 import java.util.Map;
 
-public class JsonArrayFormatter implements JsonTypeFormatter<int[]> {
+public class JsonArrayFormatter implements JsonTypeFormatter<Object> {
     @Override
-    public String format(int[] objects, JsonFormatter jsonFormatter, Map<String, Object> ctx) {
-        String result = getTrueShift(ctx) + "[\n";
+    public String format(Object object, JsonFormatter jsonFormatter, Map<String, Object> ctx) {
+        String result = "[\n";
 
         int shiftCount = (int) ctx.get("shiftCount");
         ctx.remove("shiftCount");
         ctx.put("shiftCount", shiftCount + 1);
 
-        for (Object elem : objects) {
-            result += getTrueShift(ctx) + elem.toString() + ",\n";
+        for (int i = 0; i < Array.getLength(object); i++) {
+            result += getTrueShift(ctx) + Array.get(object, i) + ",\n";
         }
 
         ctx.remove("shiftCount");

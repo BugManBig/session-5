@@ -6,7 +6,7 @@ import java.util.Map;
 public class JsonObjectFormatter implements JsonTypeFormatter<Object> {
     @Override
     public String format(Object object, JsonFormatter jsonFormatter, Map<String, Object> ctx) {
-        String result = getTrueShift(ctx) + "{\n";
+        String result = "{\n";
 
         int shiftCount = (int) ctx.get("shiftCount");
         ctx.remove("shiftCount");

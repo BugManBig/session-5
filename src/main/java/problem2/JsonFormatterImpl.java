@@ -12,8 +12,8 @@ public class JsonFormatterImpl implements JsonFormatter {
         types.put(Integer.class, new JsonSimpleFormatter());
         types.put(Double.class, new JsonSimpleFormatter());
         types.put(String.class, new JsonStringFormatter());
-        types.put(ArrayList.class, new JsonListFormatter());
-        types.put(int[].class, new JsonArrayFormatter());
+        types.put(ArrayList.class, new JsonCollectionsFormatter());
+        types.put(HashSet.class, new JsonCollectionsFormatter());
     }
 
     @Override
@@ -26,10 +26,12 @@ public class JsonFormatterImpl implements JsonFormatter {
         ctx.put("shiftCount", 0);
         ctx.put("shiftType", "    ");
 
+        if (obj.getClass().isArray()) {
+            return new JsonArrayFormatter().format(obj, this, ctx);
+        }
         if (!types.containsKey(obj.getClass())) {
             return types.get(Object.class).format(obj, this, ctx);
         }
-
         return types.get(obj.getClass()).format(obj, this, ctx);
     }
 
