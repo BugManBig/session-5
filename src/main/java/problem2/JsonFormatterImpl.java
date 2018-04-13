@@ -40,6 +40,8 @@ public class JsonFormatterImpl implements JsonFormatter {
 
     @Override
     public <T> boolean addType(Class<T> clazz, JsonTypeFormatter<T> format) {
-        return false;
+        int typesSize = types.size();
+        types.put(clazz, format);
+        return types.size() > typesSize;
     }
 }

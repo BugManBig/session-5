@@ -7,22 +7,15 @@ public class JsonObjectFormatter implements JsonTypeFormatter<Object> {
     @Override
     public String format(Object object, JsonFormatter jsonFormatter, Map<String, Object> ctx) {
         String result = "{\n";
-
-        int shiftCount = (int) ctx.get("shiftCount");
-        ctx.remove("shiftCount");
-        ctx.put("shiftCount", shiftCount + 1);
-
+        OftenActions.shiftChange(ctx, 1);
         Field[] fields = object.getClass().getDeclaredFields();
         for (Field elem : fields) {
             elem.setAccessible(true);
-            result += getTrueShift(ctx) + elem.getName() + ": " + getValue(elem, object, jsonFormatter, ctx) + ",\n";
+            result += OftenActions.getTrueShift(ctx) + elem.getName() + ": " + getValue(elem, object, jsonFormatter, ctx) + ",\n\n";
         }
-
-        ctx.remove("shiftCount");
-        ctx.put("shiftCount", shiftCount);
-
-        result += getTrueShift(ctx) + "}";
-
+        result = OftenActions.cutLastComma(result);
+        OftenActions.shiftChange(ctx, -1);
+        result += OftenActions.getTrueShift(ctx) + "}";
         return result;
     }
 
@@ -34,15 +27,5 @@ public class JsonObjectFormatter implements JsonTypeFormatter<Object> {
             e.printStackTrace();
         }
         return jsonFormatter.generateNext(result, ctx);
-    }
-
-    private String getTrueShift(Map<String, Object> ctx) {
-        String result = "";
-        int shiftCount = (int) ctx.get("shiftCount");
-        String shiftType = (String) ctx.get("shiftType");
-        for (int i = 0; i < shiftCount; i++) {
-            result += shiftType;
-        }
-        return result;
     }
 }
