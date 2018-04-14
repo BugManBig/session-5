@@ -23,14 +23,7 @@ public class JsonFormatterImpl implements JsonFormatter {
         Map<String, Object> ctx = new HashMap<>();
         ctx.put("shiftCount", 0);
         ctx.put("shiftType", "    ");
-        result += generateNext(obj, ctx) + "\n";
-        if (obj.getClass().getSuperclass() != Object.class) {
-            try {
-                result += marshall(obj.getClass().getSuperclass().getConstructor().newInstance());
-            } catch (InstantiationException | InvocationTargetException | IllegalAccessException | NoSuchMethodException e) {
-                e.printStackTrace();
-            }
-        }
+        result += generateNext(obj, ctx);
         return result;
     }
 

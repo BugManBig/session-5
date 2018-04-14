@@ -1,6 +1,7 @@
 package problem2;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 
 public class JsonObjectFormatter implements JsonTypeFormatter<Object> {
@@ -8,11 +9,7 @@ public class JsonObjectFormatter implements JsonTypeFormatter<Object> {
     public String format(Object object, JsonFormatter jsonFormatter, Map<String, Object> ctx) {
         String result = "{\n";
         OftenActions.shiftChange(ctx, 1);
-        Field[] fields = object.getClass().getDeclaredFields();
-        for (Field elem : fields) {
-            elem.setAccessible(true);
-            result += OftenActions.getTrueShift(ctx) + elem.getName() + ": " + getValue(elem, object, jsonFormatter, ctx) + ",\n\n";
-        }
+        result += getFields(object, jsonFormatter, ctx);
         result = OftenActions.cutLastComma(result);
         OftenActions.shiftChange(ctx, -1);
         result += OftenActions.getTrueShift(ctx) + "}";
@@ -27,5 +24,20 @@ public class JsonObjectFormatter implements JsonTypeFormatter<Object> {
             e.printStackTrace();
         }
         return jsonFormatter.generateNext(result, ctx);
+    }
+
+    private String getFields(Object object, JsonFormatter jsonFormatter, Map<String, Object> ctx) {
+        String result = "";
+        Field[] fields = object.getClass().getDeclaredFields();
+        for (Field elem : fields) {
+            elem.setAccessible(true);
+            result += OftenActions.getTrueShift(ctx) + elem.getName() + ": " + getValue(elem, object, jsonFormatter, ctx) + ",\n\n";
+        }
+        if (object.getClass().getSuperclass() != Object.class) try {
+            result += getFields(object.getClass().getSuperclass().getConstructor().newInstance(), jsonFormatter, ctx);
+        } catch (InstantiationException | InvocationTargetException | NoSuchMethodException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 }
